@@ -2,8 +2,8 @@
 .SYNOPSIS
 Get-BrowserCache pulls the cache and history for the browser and user spcified.
 .PARAMETER BrowserFamily
-Optional. One of FireFox, Chrome, IE, or Auto. By default, will check with WMI
-for installed browsers and grab those automatically.
+Optional. One of FireFox, Chrome, InternetExplorer, or Auto. By default, will
+check for installed browsers using WMI and grab those automatically.
 .PARAMETER UserName
 Optional. Specific user for which you want to grab browser cache and history.
 .NOTES
@@ -59,6 +59,13 @@ function Get-InstalledBrowsers {
 }
 
 function Get-IeCache {
+    # The default location of the cache for IE changes in just about every 
+    # version of Windows. Users can also set a custom location through the GUI.
+    # The correct value should be in the user's registry under:
+    # \Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Cache.
+    #
+    # To do: Test if Group Policy over-rides the user's choice, but it should.
+
 
 }
 
@@ -72,8 +79,7 @@ function Get-ChromeCache {
 
 if ($BrowserFamily -eq "Auto")
 {
-	$browsers = Get-InstalledBrowsers 
-	$browsers
+	$browsers = Get-InstalledBrowsers
 
 	$supportedBrowsers.Keys | ? { $_-band $browsers } | % { $supportedBrowsers.Get_Item($_) }
 }
